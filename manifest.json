@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Easy Report Creator",
+    "description": "Помогает заполнять и подготавливать отчеты для родителей учеников",
+    "version": "1.0.0",
+    "icons": {
+        "16": "./images/extension-icons/icon-16.png",
+        "32": "./images/extension-icons/icon-32.png",
+        "48": "./images/extension-icons/icon-48.png",
+        "128": "./images/extension-icons/icon-128.png"
+    },
+    "action": {},
+    "background": {
+        "service_worker": "./scripts/background.js"
+    },
+    "permissions": ["storage"],
+    "content_scripts": [
+        {
+            "matches": ["https://morrisonacademy.s20.online/teacher/*/customer/view*"],
+            "js": ["scripts/jquery.js", "scripts/content/studentPage.js"],
+            "run_at": "document_end"
+        }
+    ]
+}

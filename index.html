@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/bootstrap-5.1.3-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <title>Генератор отчетов</title>
+</head>
+
+<body class="d-flex flex-column" style="min-height: 100vh">
+    <nav class="navbar navbar-light bg-light navbar-expand-lg px-4 border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="./images/extension-icons/icon-32.png" alt="Logo" class="me-1">
+                Easy Report Creator
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto">
+                    <li class=" nav-item">
+                        <a class="nav-link" href="https://t.me/+DQ3mIjybyFY3OGZi" target="_blank">Актуальные версии</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://t.me/+DQ3mIjybyFY3OGZi" target="_blank">Предложить идею</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://t.me/+DQ3mIjybyFY3OGZi" target="_blank">Сообщить о проблеме</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="p-4 flex-grow-1">
+        <!-- Блок отчетности -->
+        <div class="container-fluid">
+            <!-- <div class="card"> -->
+            <h5 class="text-muted">Отчетность об успеваемости учащихся</h5>
+            <div class="text-muted" style="font-size: 0.85rem"><i class="bi bi-question-circle"></i> Чтобы открыть подсказку, нажмите на вопрос в блоке </div>
+            <div class="row g-3 gx-3 mt-2">
+
+
+                <!-- Блок с заполнением переменных для шаблона отчета -->
+                <div class="order-xl-2 col-lg-7 col-xl-5">
+                    <div class="bg-light border rounded-3 p-3 d-flex flex-column h-100">
+                        <h5 class="d-flex justify-content-between">Данные для отчета<i class="bi bi-question-circle show-info" data-info-type="report-fill" role="button" data-bs-toggle="modal" data-bs-target="#help-messages-modal-window"></i></h5>
+                        <div class="d-grid gap-3 mt-1">
+                            <!-- Имя ученика -->
+                            <div class="input-group">
+                                <span class="input-group-text">Имя ученика:</span>
+                                <input type="text" class="form-control" placeholder="Чей отчет? Малики, Васи Пупкина ..." aria-label="Name" id="student-name" required />
+                            </div>
+
+                            <!-- Посещаемость недели -->
+                            <div class="input-group">
+                                <span class="input-group-text">Посещено занятий:</span>
+                                <input type="number" class="form-control" placeholder="Факт" aria-label="Fact" min="0" id="actual-attendance" />
+                                <span class="input-group-text">из</span>
+                                <input type="number" class="form-control" placeholder="План" aria-label="Plan" value="3" min="0" id="expected-attendance" />
+                            </div>
+
+                            <!-- Пройденные уроки на GetCourse -->
+                            <div class="accordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#getcourse-lessons-collapse" aria-expanded="false">Пройденные за неделю уроки GetCourse</button>
+                                    </h2>
+                                    <div id="getcourse-lessons-collapse" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#getcourseLessons">
+                                        <div class="accordion-body overflow-scroll" style="height: 200px" id="getcourseLessons"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Комментарий учителя -->
+                            <div class="mt-2">
+                                <label for="teacher-comment" class="form-label">Комментарий учителя</label>
+
+                                <!-- Управление шаблонами комментария -->
+                                <div class="input-group" id="templates-input_group">
+                                    <label class="input-group-text" for="template-select">Шаблон</label>
+
+                                    <!-- Выбор доступных шаблонов -->
+                                    <select class="form-select" id="template-select">
+                                        <option value="0" selected>Без шаблона</option>
+                                    </select>
+
+                                    <!-- Кнопка создания нового шаблона -->
+                                    <button class="btn btn-outline-secondary shadow-none" type="button" data-bs-toggle="modal" data-bs-target="#template-manage-modal" data-action="template-add" id="add-new-template">
+                                        <i class="bi bi-plus-circle-fill" data-action="template-add"></i>
+                                    </button>
+
+                                    <!-- Кнопка редактирования выбранного шаблона -->
+                                    <button class="btn btn-outline-secondary shadow-none" type="button" data-bs-toggle="modal" data-bs-target="#template-manage-modal" data-action="template-update" id="edit-template" disabled>
+                                        <i class="bi bi-pencil-fill" data-action="template-update"></i>
+                                    </button>
+
+                                    <!-- Кнопка удаления выбранного шаблона -->
+                                    <button class="btn btn-outline-secondary shadow-none" type="button" data-bs-toggle="modal" data-bs-target="#template-manage-modal" data-action="template-delete" id="delete-template" disabled>
+                                        <i class="bi bi-trash-fill" data-action="template-delete"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Текстовое поле для комментария -->
+                                <textarea class="form-control mt-2" id="teacher-comment" style="min-height: 100px"></textarea>
+
+                                <!-- Модальное окно для создания или изменения шаблона -->
+                                <div class="modal fademodal-dialog-centered" id="template-manage-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-template-id="">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <!-- Шапка модального окна -->
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="template-manage-modal-title"> Новый шаблон комментария </h5>
+                                            </div>
+
+                                            <!-- Тело модального окна -->
+                                            <div class="modal-body">
+                                                <!-- Cоздание или изменение шаблона комментария -->
+                                                <div class="alert alert-danger" role="alert" id="comment-template-error" style="display: none">
+                                                    Шаблон обязательно должен иметь название и текст
+                                                </div>
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text">Название</span>
+                                                    <input type="text" class="form-control" placeholder="Название..." id="comment-template-title" required />
+                                                </div>
+                                                <label for="comment-template-text" class="form-label"> Текст комментария </label>
+                                                <textarea class="form-control" id="comment-template-text" rows="5" id="comment-template-text" required></textarea>
+                                            </div>
+
+                                            <!-- Футер модального окна -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-template-modal"> Отменить </button>
+                                                <button type="button" class="btn btn-success" id="create-comment-template" style="display: none">Создать</button>
+                                                <button type="button" class="btn btn-primary" id="save-comment-template" style="display: none">Сохранить</button>
+                                                <button type="button" class="btn btn-danger" id="delete-comment-template" style="display: none">Да, удалить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Оценка ученика за неделю -->
+                            <div class="input-group col-2">
+                                <span class="input-group-text">Оценка ученика за неделю (1-10):</span>
+                                <input type="number" class="form-control" value="10" max="10" min="0" placeholder="0-10" aria-label="Mark" id="student-mark" />
+                            </div>
+
+                            <!-- Кнопки для управления отчетом -->
+                            <div class="grid">
+                                <button type="submit" class="btn btn-primary" id="createReport">Создать</button>
+                                <button type="button" class="btn btn-danger" id="clearReportData">Очистить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Блок с конечным отчетом -->
+                <div class="order-xl-3 col-lg-5 col-xl-4">
+                    <div class="d-flex flex-column bg-light border rounded-3 p-3 h-100">
+                        <h5 class="d-flex justify-content-between">Сообщение отчета<i class="bi bi-question-circle show-info" data-info-type="report-result" role="button" data-bs-toggle="modal" data-bs-target="#help-messages-modal-window"></i></h5>
+                        <textarea class="form-control flex-grow-1 mt-1" value="" id="report-result" style="min-height: 200px"></textarea>
+
+                        <!-- Статусная строка + кнопки -->
+                        <div class="mt-3 d-grid">
+                            <div class="alert alert-warning" style="display:none" id="too-much-symbols-warning">Будьте внимательны, в AlfaCRM есть ограничение по количеству символов (максимум примерно 1000). Перепроверяйте целостность отчета при отправке! Данное предупреждение показывается, когда кол-во символов больше 950</div>
+                            <div class="d-flex justify-content-end align-items-center">
+                                <div class="me-auto text-muted text-danger" id="report-symbols-count">Символов: 0</div>
+                                <span class="badge bg-success" style="display: none" id="copied-to-clipboard">
+                                    <i class="bi bi-check-lg"></i> Скопировано </span>
+                                <button type="button" class="btn btn-sm btn-outline-secondary ms-2" id="copy-report" data-bs-toggle="tooltip" data-bs-placement="left" title="Скопировано">
+                                    <i class="bi bi-clipboard"></i> Скопировать </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Блок со списком учеников -->
+                <div class="order-xl-1 col-lg-12 col-xl-3">
+                    <div class="d-flex flex-column bg-light border rounded-3 p-3 h-100">
+                        <h5 class="d-flex justify-content-between">Список учеников<i class="bi bi-question-circle show-info" data-info-type="students-list" role="button" data-bs-toggle="modal" data-bs-target="#help-messages-modal-window"></i></h5>
+
+                        <div class="d-flex flex-column mt-1">
+                            <!-- Добавление нового ученика -->
+                            <div class="input-group" id="form__new-student">
+                                <input type="text" class="form-control" placeholder="Имя ученика" aria-describedby="name-validate" name="name" />
+                                <button class="btn btn-outline-secondary" type="button"> Добавить </button>
+                            </div>
+
+                            <!-- Список учеников -->
+                            <div class="mt-3" id="students-list">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вспомогательное модальное окно для отображения подсказок -->
+        <div class="modal fademodal-dialog-centered" id="help-messages-modal-window" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+
+                    <!-- Шапка модального окна -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="help-messages-modal-window-title">Подсказка</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Тело модального окна -->
+                    <div class="modal-body" id="help-messages-modal-window-text">
+                        Текст подсказки
+                    </div>
+
+                    <!-- Футер модального окна -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="help-messages-modal-window"> Закрыть </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="px-4 border-top bg-light">
+        <footer class="d-flex flex-wrap justify-content-center align-items-center pt-2 pb-3 w-100" style="font-size: 0.8rem">
+            <div class="text-muted">© 2022 Easy Report Creator</div>
+        </footer>
+    </div>
+    <script src="./scripts/jquery.js"></script>
+    <script src="./styles/bootstrap-5.1.3-dist/js/bootstrap.min.js"></script>
+    <script type="module" src="./scripts/app/script.js"></script>
+    <!-- <script type="module" src="./scripts/app/controller.js"></script> -->
+</body>
+
+</html>
